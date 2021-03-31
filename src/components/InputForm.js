@@ -11,6 +11,8 @@ import {
 import { useState } from 'react';
 // API
 import youtubeAPI from '../api/youtube';
+// axios
+import axios from 'axios';
 
 const InputForm = () => {
   const [inputText, setInputText] = useState('');
@@ -22,7 +24,7 @@ const InputForm = () => {
     setInputText(e.target.value);
   };
 
-  // MAKE YOUTUBE API REQUEST
+  // MAKE YOUTUBE API REQUEST USING VIDEO ID
   const onSearch = async (keyword) => {
     const response = await youtubeAPI.get('/search', {
       params: {
@@ -33,7 +35,7 @@ const InputForm = () => {
       },
     });
 
-    console.log(response);
+    console.log(response.data.items);
   };
 
   // SUBMIT
@@ -45,7 +47,14 @@ const InputForm = () => {
       setErrorMessage('You forgot to pass URL!');
     }
 
-    onSearch(inputText);
+    // onSearch(inputText);
+    // TODO - stworzyć customową metodę do fetchowania (hook?)
+    axios
+      .get(
+        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${inputText}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
+      )
+      .then((res) => console.log(res.data.items[0].snippet.title))
+      .catch((err) => console.log(err));
 
     setInputText('');
   };
