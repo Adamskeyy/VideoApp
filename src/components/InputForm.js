@@ -14,20 +14,20 @@ const InputForm = () => {
   const [inputText, setInputText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const onChange = (e) => setInputText(e.target.value);
+  // CHANGE
+  const onChange = (e) => {
+    setErrorMessage('');
+    setInputText(e.target.value);
+  };
 
+  // SUBMIT
   const onSubmit = (e) => {
     e.preventDefault();
-
-    const isInputEmpty = e.target.value !== 'undefined';
+    const isInputEmpty = inputText === '';
     // const isInputValid = {};
-
-    console.log(isInputEmpty);
-
     if (isInputEmpty) {
       setErrorMessage('You forgot to pass URL!');
     }
-    console.log(inputText);
     setInputText((prev) => '');
   };
 
