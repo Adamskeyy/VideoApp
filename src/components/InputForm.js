@@ -9,6 +9,8 @@ import {
 } from 'reactstrap';
 // hooks
 import { useState } from 'react';
+// API
+import youtubeAPI from '../api/youtube';
 
 const InputForm = () => {
   const [inputText, setInputText] = useState('');
@@ -20,6 +22,20 @@ const InputForm = () => {
     setInputText(e.target.value);
   };
 
+  // MAKE YOUTUBE API REQUEST
+  const onSearch = async (keyword) => {
+    const response = await youtubeAPI.get('/search', {
+      params: {
+        part: 'snippet',
+        maxResults: 5,
+        q: keyword,
+        key: process.env.REACT_APP_YOUTUBE_API_KEY,
+      },
+    });
+
+    console.log(response);
+  };
+
   // SUBMIT
   const onSubmit = (e) => {
     e.preventDefault();
@@ -28,8 +44,13 @@ const InputForm = () => {
     if (isInputEmpty) {
       setErrorMessage('You forgot to pass URL!');
     }
-    setInputText((prev) => '');
+
+    onSearch(inputText);
+
+    setInputText('');
   };
+
+  // TODO: TOGGLOWANIE MIĘDZY YOUTUBE A VIMEO (adekwatna walidacja)
 
   return (
     <Form onSubmit={onSubmit}>

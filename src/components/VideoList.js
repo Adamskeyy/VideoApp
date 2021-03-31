@@ -10,6 +10,9 @@ const VideoList = () => {
     setIsCardLayout((prev) => !prev);
   };
 
+  // TODO
+  // Zrobić responsywny widok z kafelkami - obecnie wyjeżdżają poza App przy mniejszych szerokościach ekranu
+
   return (
     <>
       <Button
