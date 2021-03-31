@@ -1,12 +1,17 @@
+// components
+import InputForm from './components/InputForm';
+import VideoList from './components/VideoList';
+import FilterBar from './components/FilterBar';
+// styles
 import './App.css';
-import { Button, Input } from 'reactstrap';
 
 function App() {
   return (
     <div className="App">
-      <Input type="text" />
-      <Button color="primary" onClick={() => console.log('działam')}>Danger!</Button>
-      {/* progress bar */}
+      <h1>Video App</h1>
+      <InputForm />
+      <FilterBar />
+      <VideoList />
     </div>
   );
 }
