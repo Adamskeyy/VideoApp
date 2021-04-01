@@ -10,7 +10,7 @@ import {
 // hooks
 import { useState } from 'react';
 // API
-import youtubeAPI from '../api/youtube';
+// import youtubeAPI from '../api/youtube';
 // axios
 import axios from 'axios';
 
@@ -25,17 +25,14 @@ const InputForm = () => {
   };
 
   // MAKE YOUTUBE API REQUEST USING VIDEO ID
-  const onSearch = async (keyword) => {
-    const response = await youtubeAPI.get('/search', {
-      params: {
-        part: 'snippet',
-        maxResults: 5,
-        q: keyword,
-        key: process.env.REACT_APP_YOUTUBE_API_KEY,
-      },
-    });
-
-    console.log(response.data.items);
+  const onSearch = (inputText) => {
+    // TODO - stworzyć customową metodę do fetchowania (hook?)
+    axios
+      .get(
+        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${inputText}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
+      )
+      .then((res) => console.log(res.data.items[0].snippet.title)) // zapisać wynik w store (localstorage + stan wewnętrzny - context/redux)
+      .catch((err) => console.log(err));
   };
 
   // SUBMIT
@@ -47,14 +44,7 @@ const InputForm = () => {
       setErrorMessage('You forgot to pass URL!');
     }
 
-    // onSearch(inputText);
-    // TODO - stworzyć customową metodę do fetchowania (hook?)
-    axios
-      .get(
-        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${inputText}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
-      )
-      .then((res) => console.log(res.data.items[0].snippet.title))
-      .catch((err) => console.log(err));
+    onSearch(inputText);
 
     setInputText('');
   };
