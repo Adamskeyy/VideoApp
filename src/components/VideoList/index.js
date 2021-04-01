@@ -4,6 +4,7 @@ import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { useState } from 'react';
 
 const VideoList = () => {
+  // fetch videos from storage
   const [isCardLayout, setIsCardLayout] = useState(false);
 
   const handleViewToggle = () => {
