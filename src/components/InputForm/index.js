@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 // reducer
-import { addVideo } from '../../redux/videoAppSlice';
+import { switchVideoSite, addVideo } from '../../redux/videoAppSlice';
 
 const InputForm = () => {
   const dispatch = useDispatch();
