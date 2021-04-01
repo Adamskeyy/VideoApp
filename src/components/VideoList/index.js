@@ -2,9 +2,10 @@
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 // hooks
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const VideoList = () => {
-  // fetch videos from storage
+  const videos = useSelector((state) => state.videoApp.videos);
   const [isCardLayout, setIsCardLayout] = useState(false);
 
   const handleViewToggle = () => {
@@ -26,14 +27,9 @@ const VideoList = () => {
         Change View
       </Button>
       <ListGroup horizontal={isCardLayout}>
-        <ListGroupItem>Cras justo odio</ListGroupItem>
-        <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-        <ListGroupItem>Morbi leo risus</ListGroupItem>
-        <ListGroupItem>Porta ac consectetur ac</ListGroupItem>
-        <ListGroupItem>Vestibulum at eros</ListGroupItem>
-        <ListGroupItem>Vestibulum at eros</ListGroupItem>
-        <ListGroupItem>Vestibulum at eros</ListGroupItem>
-        <ListGroupItem>Vestibulum at eros</ListGroupItem>
+        {videos.map((video) => (
+          <ListGroupItem key={video.id}>{video.id}</ListGroupItem>
+        ))}
       </ListGroup>
     </>
   );

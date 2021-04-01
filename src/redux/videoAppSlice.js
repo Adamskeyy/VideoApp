@@ -2,16 +2,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // axios
 import axios from 'axios';
-// react moment
+// moment
 import moment from 'moment';
-
-// const vimeoVideo = {
-//   id: '',
-//   title: '',
-//   likes: '',
-//   thumbnail: '',
-//   addedAt: '',
-// };
+// local storage methods
+import {
+  storeVideo,
+  getVideosFromStorage,
+  updateVideoInStorage,
+  deleteVideoFromStorage,
+  clearVideosFromStorage,
+} from '../localStorage';
 
 // const fetchVideoById = createAsyncThunk(
 //   'videoApp/fetchById',
@@ -27,47 +27,63 @@ export const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
     isYoutube: true,
-    youtubeVideos: [],
-    vimeoVideos: [],
+    videos: [],
     error: null,
   },
   reducers: {
     switchVideoSite: (state) => {
       state.isYoutube = !state.isYoutube;
     },
-    setVideos: (state) => {},
+    fetchVideos: (state) => {
+      console.log(getVideosFromStorage());
+    },
+    setVideos: (state) => {
+      // wrzuć filmiki ze stanu do local storage
+    },
     addVideo: (state, action) => {
+      let video;
+      // youtube videos
       if (state.isYoutube) {
-        state.youtubeVideos = [
-          ...state.youtubeVideos,
-          {
-            id: action.payload,
-            title: '',
-            views: '',
-            likes: '',
-            thumbnail: '',
-            addedAt: moment().format('DD.MM.YYYY, kk:mm'),
-            favourite: false,
-          },
-        ];
-
-        console.log(state.youtubeVideos);
-        return;
-      }
-      state.vimeoVideos = [
-        ...state.vimeoVideos,
-        {
+        video = {
           id: action.payload,
           title: '',
           views: '',
           likes: '',
           thumbnail: '',
-          addedAt: '',
+          addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
+        };
+        state.videos = [
+          ...state.videos,
+          {
+            ...video,
+          },
+        ];
+        // store in local storage
+        storeVideo(video);
+        console.log(state.videos);
+        return;
+      }
+      // vimeo videos - zredukować kod (DRY)
+      video = {
+        id: action.payload,
+        title: '',
+        likes: '',
+        thumbnail: '',
+        addedAt: moment().format('DD.MM.YYYY, kk:mm'),
+        favourite: false,
+      };
+      state.videos = [
+        ...state.videos,
+        {
+          ...video,
         },
       ];
+      storeVideo(video);
     },
-    removeVideo: (state, action) => {},
+    removeVideo: (state, action) => {
+      // odflitrować dany rekord na podstawie id
+    },
     clearVideoList: (state) => {
       state.youtubeVideos = [];
       state.vimeoVideos = [];
@@ -83,6 +99,7 @@ export const videoAppSlice = createSlice({
 
 export const {
   switchVideoSite,
+  fetchVideos,
   setVideos,
   addVideo,
   removeVideo,

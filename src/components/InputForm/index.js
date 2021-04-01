@@ -49,7 +49,7 @@ const InputForm = () => {
           type="text"
           name="clipName"
           id="clipName"
-          placeholder="Paste in clip URL..."
+          placeholder="Paste in clip ID..."
           value={inputText}
           onChange={onChange}
         />
