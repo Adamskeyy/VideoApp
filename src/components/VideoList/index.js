@@ -1,10 +1,15 @@
 // reactstrap
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { ListGroup, Button } from 'reactstrap';
 // hooks
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+// redux
+import { fetchVideos, clearVideoList } from '../../redux/videoAppSlice';
+// components
+import VideoCard from './VideoCard';
 
 const VideoList = () => {
+  const dispatch = useDispatch();
   const videos = useSelector((state) => state.videoApp.videos);
   const [isCardLayout, setIsCardLayout] = useState(false);
 
@@ -12,23 +17,38 @@ const VideoList = () => {
     setIsCardLayout((prev) => !prev);
   };
 
-  // TODO
-  // Zrobić responsywny widok z kafelkami - obecnie wyjeżdżają poza App przy mniejszych szerokościach ekranu
+  console.log(videos);
+
+  useEffect(() => {
+    dispatch(fetchVideos());
+  }, [dispatch]);
 
   return (
     <>
-      <Button
-        className="mt-2 mb-2"
-        outline
-        type="submit"
-        color="secondary"
-        onClick={handleViewToggle}
-      >
-        Change View
-      </Button>
+      {videos.length ? (
+        <>
+          <Button
+            className="mt-2 mb-2"
+            outline
+            color="secondary"
+            onClick={handleViewToggle}
+          >
+            Change View
+          </Button>
+          <Button
+            className="mt-2 mb-2"
+            color="danger"
+            onClick={() => dispatch(clearVideoList())}
+          >
+            Delete All
+          </Button>
+        </>
+      ) : null}
+
+      {/*Zrobić responsywny widok z kafelkami - obecnie wyjeżdżają poza App przy mniejszych szerokościach ekranu */}
       <ListGroup horizontal={isCardLayout}>
         {videos.map((video) => (
-          <ListGroupItem key={video.id}>{video.id}</ListGroupItem>
+          <VideoCard key={video.id} video={video} />
         ))}
       </ListGroup>
     </>

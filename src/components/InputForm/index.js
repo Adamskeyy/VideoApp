@@ -16,6 +16,7 @@ import { switchVideoSite, addVideo } from '../../redux/videoAppSlice';
 const InputForm = () => {
   const dispatch = useDispatch();
 
+  // TODO: na podstawie inputu zwalidować o jaką stronę chodzi i "wyciągnąć" id z adresu
   const [inputText, setInputText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 

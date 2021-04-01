@@ -13,15 +13,14 @@ import {
   clearVideosFromStorage,
 } from '../localStorage';
 
-// const fetchVideoById = createAsyncThunk(
-//   'videoApp/fetchById',
-//   axios
-//     .get(
-//       `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
-//     )
-//     .then((res) => res.data.items[0].snippet)
-//     .catch((err) => err)
-// );
+const fetchVideoById = createAsyncThunk('videoApp/fetchById', (videoId) => {
+  axios
+    .get(
+      `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
+    )
+    .then((res) => res.data.items[0].snippet)
+    .catch((err) => err);
+});
 
 export const videoAppSlice = createSlice({
   name: 'videoApp',
@@ -35,10 +34,7 @@ export const videoAppSlice = createSlice({
       state.isYoutube = !state.isYoutube;
     },
     fetchVideos: (state) => {
-      console.log(getVideosFromStorage());
-    },
-    setVideos: (state) => {
-      // wrzuć filmiki ze stanu do local storage
+      state.videos = getVideosFromStorage();
     },
     addVideo: (state, action) => {
       let video;
@@ -82,17 +78,19 @@ export const videoAppSlice = createSlice({
       storeVideo(video);
     },
     removeVideo: (state, action) => {
-      // odflitrować dany rekord na podstawie id
+      deleteVideoFromStorage(action.payload);
     },
     clearVideoList: (state) => {
-      state.youtubeVideos = [];
-      state.vimeoVideos = [];
+      state.videos = [];
+      clearVideosFromStorage();
     },
     addToFavourites: (state, action) => {
       // na podstawie id zmienić pole filmiku isFavourite na true
+      updateVideoInStorage();
     },
     removeFromFavourites: (state, action) => {
       // na podstawie id zmienić pole filmiku isFavourite na false
+      updateVideoInStorage();
     },
   },
 });
@@ -100,7 +98,6 @@ export const videoAppSlice = createSlice({
 export const {
   switchVideoSite,
   fetchVideos,
-  setVideos,
   addVideo,
   removeVideo,
   clearVideoList,
