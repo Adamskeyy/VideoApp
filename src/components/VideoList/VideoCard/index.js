@@ -1,5 +1,5 @@
-const videoCard = () => {
+const VideoCard = () => {
   return <div>Film</div>;
 };
 
-export default videoCard;
+export default VideoCard;

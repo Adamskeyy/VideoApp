@@ -9,12 +9,13 @@ import {
 } from 'reactstrap';
 // hooks
 import { useState } from 'react';
-// API
-// import youtubeAPI from '../api/youtube';
-// axios
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+// reducer
+import { addVideo } from '../../redux/videoAppSlice';
 
 const InputForm = () => {
+  const dispatch = useDispatch();
+
   const [inputText, setInputText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,17 +25,6 @@ const InputForm = () => {
     setInputText(e.target.value);
   };
 
-  // MAKE YOUTUBE API REQUEST USING VIDEO ID
-  const onSearch = (inputText) => {
-    // TODO - stworzyć customową metodę do fetchowania (hook?)
-    axios
-      .get(
-        `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${inputText}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
-      )
-      .then((res) => console.log(res.data.items[0].snippet.title)) // zapisać wynik w store (localstorage + stan wewnętrzny - context/redux)
-      .catch((err) => console.log(err));
-  };
-
   // SUBMIT
   const onSubmit = (e) => {
     e.preventDefault();
@@ -42,10 +32,9 @@ const InputForm = () => {
     // const isInputValid = {};
     if (isInputEmpty) {
       setErrorMessage('You forgot to pass URL!');
+      return;
     }
-
-    onSearch(inputText);
-
+    dispatch(addVideo(inputText));
     setInputText('');
   };
 
