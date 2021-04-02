@@ -44,7 +44,8 @@ const videoAppSlice = createSlice({
       state.videos = getVideosFromStorage();
     },
     addVideo: (state, { payload }) => {
-      console.log(payload);
+      // check if videoid already in state
+      // create error message if it is and pass it to input
       let video;
       // youtube videos
       if (state.isYoutube) {
