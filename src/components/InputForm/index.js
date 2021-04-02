@@ -11,7 +11,9 @@ import {
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 // reducer
-import { switchVideoSite, addVideo } from '../../redux/videoAppSlice';
+import { fetchVideoById } from '../../redux/videoAppSlice';
+// axios
+// import axios from 'axios';
 
 const InputForm = () => {
   const dispatch = useDispatch();
@@ -32,14 +34,12 @@ const InputForm = () => {
     const isInputEmpty = inputText === '';
     // const isInputValid = {};
     if (isInputEmpty) {
-      setErrorMessage('You forgot to pass URL!');
+      setErrorMessage('You forgot to pass something!');
       return;
     }
-    dispatch(addVideo(inputText));
+    dispatch(fetchVideoById(inputText));
     setInputText('');
   };
-
-  // TODO: TOGGLOWANIE MIĘDZY YOUTUBE A VIMEO (adekwatna walidacja)
 
   return (
     <Form onSubmit={onSubmit}>
@@ -50,7 +50,7 @@ const InputForm = () => {
           type="text"
           name="clipName"
           id="clipName"
-          placeholder="Paste in clip ID..."
+          placeholder="Paste in clip ID or URL..."
           value={inputText}
           onChange={onChange}
         />

@@ -13,21 +13,28 @@ import {
   clearVideosFromStorage,
 } from '../localStorage';
 
-const fetchVideoById = createAsyncThunk('videoApp/fetchById', (videoId) => {
-  axios
-    .get(
-      `https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`
-    )
-    .then((res) => res.data.items[0].snippet)
-    .catch((err) => err);
-});
+export const fetchVideoById = createAsyncThunk(
+  'videoApp/fetchVideoById',
+  (videoId, { dispatch }) => {
+    axios
+      .get(
+        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,statistics`
+      )
+      .then((res) => {
+        let videoData = res.data.items[0];
+        dispatch(addVideo(videoData));
+      })
+      .catch((err) => err);
+  }
+);
 
-export const videoAppSlice = createSlice({
+const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
     isYoutube: true,
     videos: [],
     error: null,
+    loading: false,
   },
   reducers: {
     switchVideoSite: (state) => {
@@ -36,16 +43,17 @@ export const videoAppSlice = createSlice({
     fetchVideos: (state) => {
       state.videos = getVideosFromStorage();
     },
-    addVideo: (state, action) => {
+    addVideo: (state, { payload }) => {
+      console.log(payload);
       let video;
       // youtube videos
       if (state.isYoutube) {
         video = {
-          id: action.payload,
-          title: '',
-          views: '',
-          likes: '',
-          thumbnail: '',
+          id: payload.id,
+          title: payload.snippet.title,
+          views: payload.statistics.viewCount,
+          likes: payload.statistics.likeCount,
+          thumbnail: payload.snippet.thumbnails.medium.url,
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
         };
@@ -55,14 +63,12 @@ export const videoAppSlice = createSlice({
             ...video,
           },
         ];
-        // store in local storage
         storeVideo(video);
-        console.log(state.videos);
         return;
       }
       // vimeo videos - zredukować kod (DRY)
       video = {
-        id: action.payload,
+        id: payload.id,
         title: '',
         likes: '',
         thumbnail: '',
@@ -77,20 +83,28 @@ export const videoAppSlice = createSlice({
       ];
       storeVideo(video);
     },
-    removeVideo: (state, action) => {
-      deleteVideoFromStorage(action.payload);
+    removeVideo: (state, { payload }) => {
+      deleteVideoFromStorage(payload);
+      state.videos = [...state.videos.filter(({ id }) => id !== payload)];
     },
     clearVideoList: (state) => {
       state.videos = [];
       clearVideosFromStorage();
     },
-    addToFavourites: (state, action) => {
-      // na podstawie id zmienić pole filmiku isFavourite na true
+    toggleFavourite: (state, action) => {
+      // na podstawie id zmienić pole filmiku isFavourite na przeciwne
       updateVideoInStorage();
     },
-    removeFromFavourites: (state, action) => {
-      // na podstawie id zmienić pole filmiku isFavourite na false
-      updateVideoInStorage();
+  },
+  extraReducers: {
+    [fetchVideoById.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [fetchVideoById.fulfilled]: (state, action) => {
+      state.loading = false;
+    },
+    [fetchVideoById.rejected]: (state, action) => {
+      state.loading = false;
     },
   },
 });
@@ -101,8 +115,7 @@ export const {
   addVideo,
   removeVideo,
   clearVideoList,
-  addToFavourites,
-  removeFromFavourites,
+  toggleFavourite,
 } = videoAppSlice.actions;
 
 export default videoAppSlice.reducer;

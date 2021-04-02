@@ -27,12 +27,12 @@ export const getVideosFromStorage = () => {
   return videos;
 };
 
-export const updateVideoInStorage = (updatedItem) => {
+export const updateVideoInStorage = (updatedVideo) => {
   let videos = JSON.parse(localStorage.getItem('videos'));
 
-  videos.forEach((item, index) => {
-    if (updatedItem.id === item.id) {
-      videos.splice(index, 1, updatedItem);
+  videos.forEach((video, index) => {
+    if (updatedVideo.id === video.id) {
+      videos.splice(index, 1, updatedVideo);
     }
   });
   localStorage.setItem('videos', JSON.stringify(videos));
@@ -41,8 +41,8 @@ export const updateVideoInStorage = (updatedItem) => {
 export const deleteVideoFromStorage = (id) => {
   let videos = JSON.parse(localStorage.getItem('videos'));
 
-  videos.forEach((item, index) => {
-    if (id === item.id) {
+  videos.forEach((video, index) => {
+    if (id === video.id) {
       videos.splice(index, 1);
     }
   });
