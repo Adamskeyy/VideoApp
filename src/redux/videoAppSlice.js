@@ -92,9 +92,13 @@ const videoAppSlice = createSlice({
       state.videos = [];
       clearVideosFromStorage();
     },
-    toggleFavourite: (state, action) => {
-      // na podstawie id zmienić pole filmiku isFavourite na przeciwne
-      updateVideoInStorage();
+    toggleFavourite: (state, { payload }) => {
+      updateVideoInStorage(payload);
+      state.videos.forEach((video, index) => {
+        if (payload.id === video.id) {
+          state.videos.splice(index, 1, payload);
+        }
+      });
     },
   },
   extraReducers: {
