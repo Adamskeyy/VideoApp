@@ -55,6 +55,7 @@ const videoAppSlice = createSlice({
           views: payload.statistics.viewCount,
           likes: payload.statistics.likeCount,
           thumbnail: payload.snippet.thumbnails.medium.url,
+          rawDateTime: moment(),
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
         };
@@ -73,6 +74,7 @@ const videoAppSlice = createSlice({
         title: '',
         likes: '',
         thumbnail: '',
+        rawDateTime: moment(),
         addedAt: moment().format('DD.MM.YYYY, kk:mm'),
         favourite: false,
       };
@@ -100,6 +102,8 @@ const videoAppSlice = createSlice({
         }
       });
     },
+    sortByOldest: (state, action) => {},
+    sortByNewest: (state, action) => {},
   },
   extraReducers: {
     [fetchVideoById.pending]: (state, action) => {
