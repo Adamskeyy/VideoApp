@@ -102,8 +102,26 @@ const videoAppSlice = createSlice({
         }
       });
     },
-    sortByOldest: (state, action) => {},
-    sortByNewest: (state, action) => {},
+    sortByOldest: (state) => {
+      const newOrder = [
+        ...state.videos.sort(
+          (a, b) =>
+            new Date(a.rawDateTime).getTime() -
+            new Date(b.rawDateTime).getTime()
+        ),
+      ];
+      state.videos = newOrder;
+    },
+    sortByNewest: (state) => {
+      const newOrder = [
+        ...state.videos.sort(
+          (a, b) =>
+            new Date(b.rawDateTime).getTime() -
+            new Date(a.rawDateTime).getTime()
+        ),
+      ];
+      state.videos = newOrder;
+    },
   },
   extraReducers: {
     [fetchVideoById.pending]: (state, action) => {
@@ -125,6 +143,8 @@ export const {
   removeVideo,
   clearVideoList,
   toggleFavourite,
+  sortByNewest,
+  sortByOldest,
 } = videoAppSlice.actions;
 
 export default videoAppSlice.reducer;

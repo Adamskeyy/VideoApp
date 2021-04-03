@@ -1,5 +1,5 @@
 // hooks
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // reactstrap
 import {
   Dropdown,
@@ -8,41 +8,25 @@ import {
   DropdownItem,
 } from 'reactstrap';
 // redux
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { sortByNewest, sortByOldest } from '../../redux/videoAppSlice';
 
 const SortBy = () => {
-  const videos = useSelector((state) => state.videoApp.videos);
+  const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
-
-  const sortByOldest = () => {
-    const array = [...videos];
-    const sortedArray = array.sort(
-      (a, b) =>
-        new Date(a.rawDateTime).getTime() - new Date(b.rawDateTime).getTime()
-    );
-    console.log(sortedArray);
-  };
-  const sortByNewest = () => {
-    const array = [...videos];
-    const sortedArray = array.sort(
-      (a, b) =>
-        new Date(b.rawDateTime).getTime() - new Date(a.rawDateTime).getTime()
-    );
-    console.log(sortedArray);
-  };
-
-  useEffect(() => {
-    console.log(videos);
-  }, [videos]);
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+    <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
       <DropdownToggle caret>Sort by</DropdownToggle>
       <DropdownMenu>
-        <DropdownItem onClick={sortByOldest}>Oldest</DropdownItem>
-        <DropdownItem onClick={sortByNewest}>Newest</DropdownItem>
+        <DropdownItem onClick={() => dispatch(sortByOldest())}>
+          Oldest
+        </DropdownItem>
+        <DropdownItem onClick={() => dispatch(sortByNewest())}>
+          Newest
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

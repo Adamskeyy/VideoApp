@@ -9,7 +9,7 @@ export default configureStore({
     videoApp: videoAppReducer,
   },
   middleware: (
-    getDefaultMiddleware // getting rid of serializablechekc error when handling momentjs objects
+    getDefaultMiddleware // getting rid of serializable check error when handling momentjs objects
   ) =>
     getDefaultMiddleware({
       thunk: {
