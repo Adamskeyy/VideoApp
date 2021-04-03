@@ -12,8 +12,6 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 // reducer
 import { fetchVideoById } from '../../redux/videoAppSlice';
-// axios
-// import axios from 'axios';
 
 const InputForm = () => {
   const dispatch = useDispatch();
@@ -59,6 +57,13 @@ const InputForm = () => {
 
       <Button className="mt-2 mb-4" type="submit" color="primary">
         Add Clip
+      </Button>
+      <Button
+        className="mt-2 mb-4 ml-4"
+        color="primary"
+        onClick={() => console.log('foo')}
+      >
+        Upload clip list...
       </Button>
     </Form>
   );

@@ -1,14 +1,24 @@
 // reactstrap / styles
-import { ListGroup, Button } from 'reactstrap';
+import {
+  ListGroup,
+  Button,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+} from 'reactstrap';
 import './VideoList.css';
 // hooks
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import usePagination from '../../hooks/usePagination';
 // redux
 import { fetchVideos, clearVideoList } from '../../redux/videoAppSlice';
 // components
-import VideoCard from './VideoCard';
+import VideoCard from '../VideoCard';
 import SortBy from '../SortBy';
+// variables
+const ITEMS_PER_PAGE = 3;
+const START_FROM = 1;
 
 const VideoList = () => {
   const dispatch = useDispatch();
@@ -16,40 +26,58 @@ const VideoList = () => {
   const [isCardLayout, setIsCardLayout] = useState(false);
   const [showFavourites, setShowFavourites] = useState(false);
 
-  const handleViewToggle = () => {
-    setIsCardLayout((prev) => !prev);
-  };
-
   useEffect(() => {
     dispatch(fetchVideos());
   }, [dispatch]);
 
-  const toggleFavourites = () => {
-    setShowFavourites((prev) => !prev);
-  };
-
-  let taskItemClasses = 'fa fa-star';
-  if (showFavourites) {
-    taskItemClasses = 'fa fa-star checked';
-  }
-
   let videosToDisplay = [...videos];
   if (showFavourites) {
-    videosToDisplay = videos.filter((video) => video.favourite);
+    videosToDisplay = videosToDisplay.filter((video) => video.favourite);
   }
 
+  let favouriteIconClasses = 'fa fa-star';
+  if (showFavourites) {
+    favouriteIconClasses = 'fa fa-star checked';
+  }
+
+  const {
+    slicedData,
+    pagination,
+    goToPrevPage,
+    goToNextPage,
+    changePage,
+  } = usePagination({
+    itemsPerPage: ITEMS_PER_PAGE,
+    data: videosToDisplay,
+    startFrom: START_FROM,
+  });
+
+  const videoList = videosToDisplay.length ? (
+    <ListGroup horizontal={isCardLayout}>
+      {videosToDisplay.map((video) => (
+        <VideoCard key={video.id} video={video} />
+      ))}
+    </ListGroup>
+  ) : (
+    <p>There is nothing to display!</p>
+  );
+
+  // component?
   const controlButtons = (
     <>
       <Button
         className="mt-2 mb-2 mr-2"
         outline
         color="secondary"
-        onClick={handleViewToggle}
+        onClick={() => setIsCardLayout((prev) => !prev)}
       >
         Change View
       </Button>
-      <Button onClick={toggleFavourites} color="secondary">
-        <span className={taskItemClasses}></span>
+      <Button
+        onClick={() => setShowFavourites((prev) => !prev)}
+        color="secondary"
+      >
+        <span className={favouriteIconClasses}></span>
       </Button>
       <SortBy />
       <Button
@@ -62,19 +90,54 @@ const VideoList = () => {
     </>
   );
 
+  // component?
+  const paginationNav =
+    videosToDisplay.length < ITEMS_PER_PAGE ? null : (
+      <Pagination aria-label="Page navigation">
+        <PaginationItem>
+          <PaginationLink
+            disabled={false}
+            previous
+            href="#"
+            onClick={goToPrevPage}
+          />
+        </PaginationItem>
+        {pagination.map((page) => {
+          if (!page.ellipsis) {
+            return (
+              <PaginationItem active={page.current} key={page.id}>
+                <PaginationLink
+                  href="/#"
+                  onClick={(e) => changePage(page.id, e)}
+                >
+                  {page.id}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          } else {
+            return (
+              <PaginationItem key={page.id}>
+                <span>&hellip;</span>
+              </PaginationItem>
+            );
+          }
+        })}
+        <PaginationItem>
+          <PaginationLink
+            disabled={false}
+            next
+            href="#"
+            onClick={goToNextPage}
+          />
+        </PaginationItem>
+      </Pagination>
+    );
+
   return (
     <>
-      {videosToDisplay.length ? controlButtons : null}
-      {/*Zrobić responsywny widok z kafelkami - obecnie wyjeżdżają poza App przy mniejszych szerokościach ekranu */}
-      <ListGroup horizontal={isCardLayout}>
-        {videosToDisplay.length ? (
-          videosToDisplay.map((video) => (
-            <VideoCard key={video.id} video={video} />
-          ))
-        ) : (
-          <p>There is nothing to display!</p>
-        )}
-      </ListGroup>
+      {controlButtons}
+      {videoList}
+      {paginationNav}
     </>
   );
 };

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,iBAAiB,CAAC;EAChB,QAAQ,EAAE,MAAM;EAChB,cAAc,EAAE,MAAM;EACtB,QAAQ,EAAE,QAAQ;EAClB,MAAM,EAAE,CAAC;CASV;;AAbD,AAME,iBANe,CAMf,MAAM,CAAC;EACL,IAAI,EAAE,CAAC;EACP,GAAG,EAAE,CAAC;EACN,MAAM,EAAE,IAAI;EACZ,KAAK,EAAE,IAAI;EACX,QAAQ,EAAE,QAAQ;CACnB",
+    "sources": [
+        "VideoModal.scss"
+    ],
+    "names": [],
+    "file": "VideoModal.css"
+}

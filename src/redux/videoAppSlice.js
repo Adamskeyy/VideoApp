@@ -11,11 +11,12 @@ import {
   updateVideoInStorage,
   deleteVideoFromStorage,
   clearVideosFromStorage,
-} from '../localStorage';
+} from '../hooks/useLocalStorage';
 
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
   (videoId, { dispatch }) => {
+    // wstrzykiwać do geta URL na podstawie inputu - dostosować do vimeo/youtube i podać ID + klucz
     axios
       .get(
         `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,statistics`

@@ -1,23 +1,27 @@
-export const storeVideo = (video) => {
+// const useLocalStorage = ({ video }) => {
+//   return {
+//     storeVideo,
+//     getVideosFromStorage,
+//     updateVideoInStorage,
+//     deleteVideoFromStorage,
+//     clearVideosFromStorage,
+//   }
+// }
+
+const storeVideo = (video) => {
   let videos;
-  // Check if any videos in LS
   if (localStorage.getItem('videos') === null) {
     videos = [];
-    // Push new video
     videos.push(video);
-    // Set LS
     localStorage.setItem('videos', JSON.stringify(videos));
   } else {
-    // Get what is already in LS
     videos = JSON.parse(localStorage.getItem('videos'));
-    // Push new video
     videos.push(video);
-    // reset LS
     localStorage.setItem('videos', JSON.stringify(videos));
   }
 };
 
-export const getVideosFromStorage = () => {
+const getVideosFromStorage = () => {
   let videos;
   if (localStorage.getItem('videos') === null) {
     videos = [];
@@ -27,7 +31,7 @@ export const getVideosFromStorage = () => {
   return videos;
 };
 
-export const updateVideoInStorage = (updatedVideo) => {
+const updateVideoInStorage = (updatedVideo) => {
   let videos = JSON.parse(localStorage.getItem('videos'));
 
   videos.forEach((video, index) => {
@@ -38,7 +42,7 @@ export const updateVideoInStorage = (updatedVideo) => {
   localStorage.setItem('videos', JSON.stringify(videos));
 };
 
-export const deleteVideoFromStorage = (id) => {
+const deleteVideoFromStorage = (id) => {
   let videos = JSON.parse(localStorage.getItem('videos'));
 
   videos.forEach((video, index) => {
@@ -49,6 +53,14 @@ export const deleteVideoFromStorage = (id) => {
   localStorage.setItem('videos', JSON.stringify(videos));
 };
 
-export const clearVideosFromStorage = () => {
+const clearVideosFromStorage = () => {
   localStorage.removeItem('videos');
+};
+
+export {
+  storeVideo,
+  getVideosFromStorage,
+  updateVideoInStorage,
+  deleteVideoFromStorage,
+  clearVideosFromStorage,
 };

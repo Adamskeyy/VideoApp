@@ -4,7 +4,7 @@ import './VideoCard.css';
 // hooks
 import { useDispatch } from 'react-redux';
 // redux
-import { removeVideo, toggleFavourite } from '../../../redux/videoAppSlice';
+import { removeVideo, toggleFavourite } from '../../redux/videoAppSlice';
 // components
 import VideoModal from '../VideoModal';
 
@@ -37,7 +37,7 @@ const VideoCard = ({ video }) => {
         alt={title}
       />
       {/* przekazać do modalu id filmu i wstawić tam iframe z kontrolerami, wyłączenie na backdropie, brak buttonów */}
-      <VideoModal />
+      <VideoModal videoId={video.id} />
       <h5>{title}</h5>
       <p>Views: {views}</p>
       <p>Likes: {likes}</p>
@@ -45,7 +45,11 @@ const VideoCard = ({ video }) => {
       <Button onClick={handleToggleFavourite} color="secondary">
         <span className={taskItemClasses}></span>
       </Button>
-      <Button color="danger" onClick={() => dispatch(removeVideo(id))}>
+      <Button
+        className="ml-3"
+        color="danger"
+        onClick={() => dispatch(removeVideo(id))}
+      >
         Delete
       </Button>
     </ListGroupItem>
