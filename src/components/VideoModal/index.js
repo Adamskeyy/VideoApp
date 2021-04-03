@@ -9,12 +9,13 @@ const VideoModal = ({ videoId }) => {
 
   const toggleModal = () => setModal(!modal);
 
+  // different modal for Vimeo
   return (
     <div>
-      <Button className="mt-3 mb-2" color="danger" onClick={toggleModal}>
+      <Button className="mt-3 mb-2" color="warning" onClick={toggleModal}>
         Play
       </Button>
-      <Modal onClick={toggleModal} isOpen={modal} toggle={toggleModal}>
+      <Modal isOpen={modal} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal} />
         <ModalBody>
           <div className="video-responsive">

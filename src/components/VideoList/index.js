@@ -64,9 +64,9 @@ const VideoList = () => {
 
   // component?
   const controlButtons = (
-    <>
+    <div>
       <Button
-        className="mt-2 mb-2 mr-2"
+        className="m-2"
         outline
         color="secondary"
         onClick={() => setIsCardLayout((prev) => !prev)}
@@ -74,20 +74,21 @@ const VideoList = () => {
         Change View
       </Button>
       <Button
+        className="m-2"
         onClick={() => setShowFavourites((prev) => !prev)}
         color="secondary"
       >
         <span className={favouriteIconClasses}></span>
       </Button>
-      <SortBy />
       <Button
-        className="mt-2 mb-2"
+        className="m-2"
         color="danger"
         onClick={() => dispatch(clearVideoList())}
       >
         Delete All
       </Button>
-    </>
+      <SortBy />
+    </div>
   );
 
   // component?

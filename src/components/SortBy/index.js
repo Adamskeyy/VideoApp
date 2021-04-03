@@ -18,7 +18,7 @@ const SortBy = () => {
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+    <Dropdown className="m-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
       <DropdownToggle caret>Sort by</DropdownToggle>
       <DropdownMenu>
         <DropdownItem onClick={() => dispatch(sortByOldest())}>

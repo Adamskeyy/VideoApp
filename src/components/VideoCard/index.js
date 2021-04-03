@@ -36,7 +36,6 @@ const VideoCard = ({ video }) => {
         src={thumbnail}
         alt={title}
       />
-      {/* przekazać do modalu id filmu i wstawić tam iframe z kontrolerami, wyłączenie na backdropie, brak buttonów */}
       <VideoModal videoId={video.id} />
       <h5>{title}</h5>
       <p>Views: {views}</p>

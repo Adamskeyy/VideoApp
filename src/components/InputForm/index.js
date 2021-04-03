@@ -20,13 +20,13 @@ const InputForm = () => {
   const [inputText, setInputText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // CHANGE
+  // let re = new RegExp('^(https://www.youtube.com/watch?v=|https://youtu.be/)(.+)$');
+
   const onChange = (e) => {
     setErrorMessage('');
     setInputText(e.target.value);
   };
 
-  // SUBMIT
   const onSubmit = (e) => {
     e.preventDefault();
     const isInputEmpty = inputText === '';
@@ -40,10 +40,11 @@ const InputForm = () => {
   };
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form style={{ width: '60%', margin: '0 auto' }} onSubmit={onSubmit}>
       <FormGroup className="position-relative">
-        <Label for="clipName">Add new clip</Label>
+        <Label for="clipName">Add new clip:</Label>
         <Input
+          className="mb-4"
           invalid={errorMessage !== ''}
           type="text"
           name="clipName"
@@ -52,18 +53,12 @@ const InputForm = () => {
           value={inputText}
           onChange={onChange}
         />
-        <FormFeedback tooltip>{errorMessage}</FormFeedback>
+        <FormFeedback style={{ margin: '0 auto' }} tooltip>
+          {errorMessage}
+        </FormFeedback>
       </FormGroup>
-
-      <Button className="mt-2 mb-4" type="submit" color="primary">
+      <Button className="m-2" type="submit" color="primary">
         Add Clip
-      </Button>
-      <Button
-        className="mt-2 mb-4 ml-4"
-        color="primary"
-        onClick={() => console.log('foo')}
-      >
-        Upload clip list...
       </Button>
     </Form>
   );
