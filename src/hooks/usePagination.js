@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const usePagination = (initialState) => {
   const { itemsPerPage, data, startFrom } = initialState;
@@ -11,6 +11,11 @@ const usePagination = (initialState) => {
   const [slicedData, setSlicedData] = useState(
     [...data].slice((currentPage - 1) * perPage, currentPage * perPage)
   );
+
+  useEffect(() => {
+    console.log('usePagination');
+    console.log(data);
+  }, [data]);
 
   let ellipsisLeft = false;
   let ellipsisRight = false;
@@ -67,6 +72,7 @@ const usePagination = (initialState) => {
   };
 
   return {
+    currentPage,
     slicedData,
     pagination,
     goToPrevPage,

@@ -1,16 +1,10 @@
 // reactstrap / styles
-import {
-  ListGroup,
-  Button,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-} from 'reactstrap';
+import { ListGroup, Button } from 'reactstrap';
+import PaginationComponent from 'react-reactstrap-pagination';
 import './VideoList.css';
 // hooks
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import usePagination from '../../hooks/usePagination';
 // redux
 import { fetchVideos, clearVideoList } from '../../redux/videoAppSlice';
 // components
@@ -18,43 +12,47 @@ import VideoCard from '../VideoCard';
 import SortBy from '../SortBy';
 // variables
 const ITEMS_PER_PAGE = 3;
-const START_FROM = 1;
 
 const VideoList = () => {
+  // video state
   const dispatch = useDispatch();
   const videos = useSelector((state) => state.videoApp.videos);
+  // UI state
   const [isCardLayout, setIsCardLayout] = useState(false);
   const [showFavourites, setShowFavourites] = useState(false);
+  // pagination
+  const [selectedPage, setSelectedPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchVideos());
   }, [dispatch]);
 
-  let videosToDisplay = [...videos];
-  if (showFavourites) {
-    videosToDisplay = videosToDisplay.filter((video) => video.favourite);
-  }
+  const from = (selectedPage - 1) * ITEMS_PER_PAGE;
+  const to = selectedPage * ITEMS_PER_PAGE;
+  const videosToDisplay = videos.filter((v) => !showFavourites || v.favourite);
+  const videosOnCurrentPage = videosToDisplay.slice(from, to);
+
+  const handleSelected = (selectedPage) => {
+    setSelectedPage(selectedPage);
+  };
+
+  const handleFavouriteFilter = () => {
+    // wróć na pierwszą stronę
+    setShowFavourites((prev) => !prev);
+  };
 
   let favouriteIconClasses = 'fa fa-star';
   if (showFavourites) {
     favouriteIconClasses = 'fa fa-star checked';
   }
 
-  const {
-    slicedData,
-    pagination,
-    goToPrevPage,
-    goToNextPage,
-    changePage,
-  } = usePagination({
-    itemsPerPage: ITEMS_PER_PAGE,
-    data: videosToDisplay,
-    startFrom: START_FROM,
-  });
+  // videos in filter - wszystkie/favourites
+  // videos to show in current page - max_per_page
 
+  // wygenerować listę z samymi favourites
   const videoList = videosToDisplay.length ? (
     <ListGroup horizontal={isCardLayout}>
-      {videosToDisplay.map((video) => (
+      {videosOnCurrentPage.map((video) => (
         <VideoCard key={video.id} video={video} />
       ))}
     </ListGroup>
@@ -62,7 +60,6 @@ const VideoList = () => {
     <p>There is nothing to display!</p>
   );
 
-  // component?
   const controlButtons = (
     <div>
       <Button
@@ -73,11 +70,7 @@ const VideoList = () => {
       >
         Change View
       </Button>
-      <Button
-        className="m-2"
-        onClick={() => setShowFavourites((prev) => !prev)}
-        color="secondary"
-      >
+      <Button className="m-2" onClick={handleFavouriteFilter} color="secondary">
         <span className={favouriteIconClasses}></span>
       </Button>
       <Button
@@ -91,54 +84,15 @@ const VideoList = () => {
     </div>
   );
 
-  // component?
-  const paginationNav =
-    videosToDisplay.length < ITEMS_PER_PAGE ? null : (
-      <Pagination aria-label="Page navigation">
-        <PaginationItem>
-          <PaginationLink
-            disabled={false}
-            previous
-            href="#"
-            onClick={goToPrevPage}
-          />
-        </PaginationItem>
-        {pagination.map((page) => {
-          if (!page.ellipsis) {
-            return (
-              <PaginationItem active={page.current} key={page.id}>
-                <PaginationLink
-                  href="/#"
-                  onClick={(e) => changePage(page.id, e)}
-                >
-                  {page.id}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          } else {
-            return (
-              <PaginationItem key={page.id}>
-                <span>&hellip;</span>
-              </PaginationItem>
-            );
-          }
-        })}
-        <PaginationItem>
-          <PaginationLink
-            disabled={false}
-            next
-            href="#"
-            onClick={goToNextPage}
-          />
-        </PaginationItem>
-      </Pagination>
-    );
-
   return (
     <>
       {controlButtons}
+      <PaginationComponent
+        totalItems={videosToDisplay.length}
+        pageSize={ITEMS_PER_PAGE}
+        onSelect={handleSelected}
+      />
       {videoList}
-      {paginationNav}
     </>
   );
 };

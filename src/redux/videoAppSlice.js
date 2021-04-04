@@ -11,7 +11,7 @@ import {
   updateVideoInStorage,
   deleteVideoFromStorage,
   clearVideosFromStorage,
-} from '../hooks/useLocalStorage';
+} from '../helpers/localStorage';
 
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',

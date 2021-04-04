@@ -1,4 +1,5 @@
 // components
+import Header from './components/Header';
 import InputForm from './components/InputForm';
 import CustomVideoListModal from './components/CustomVideoListModal';
 import VideoList from './components/VideoList';
@@ -8,7 +9,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <h1 className="display-1">Video App</h1>
+      <Header />
       <InputForm />
       <CustomVideoListModal />
       <VideoList />

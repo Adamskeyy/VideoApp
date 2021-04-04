@@ -1,13 +1,3 @@
-// const useLocalStorage = ({ video }) => {
-//   return {
-//     storeVideo,
-//     getVideosFromStorage,
-//     updateVideoInStorage,
-//     deleteVideoFromStorage,
-//     clearVideosFromStorage,
-//   }
-// }
-
 const storeVideo = (video) => {
   let videos;
   if (localStorage.getItem('videos') === null) {

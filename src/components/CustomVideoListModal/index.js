@@ -55,7 +55,7 @@ const CustomVideoListModal = () => {
                 type="textarea"
                 name="clipName"
                 id="clipName"
-                placeholder="Paste in list of IDs or URLs..."
+                placeholder="Paste in list of IDs or URLs... ([id, url...])"
                 value={inputText}
                 onChange={onChange}
               />
