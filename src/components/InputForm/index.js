@@ -1,26 +1,20 @@
 // reactstrap
-import {
-  Input,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  FormFeedback,
-} from 'reactstrap';
+import { Input, Button, Form, FormGroup, FormFeedback } from 'reactstrap';
 // hooks
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-// reducer
+// redux
 import { fetchVideoById } from '../../redux/videoAppSlice';
+// validation
+import useValidate from '../../hooks/useValidate';
 
 const InputForm = () => {
   const dispatch = useDispatch();
-
-  // TODO: na podstawie inputu zwalidować o jaką stronę chodzi i "wyciągnąć" id z adresu
   const [inputText, setInputText] = useState('');
+  const [inputType, setInputType] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  // let re = new RegExp('^(https://www.youtube.com/watch?v=|https://youtu.be/)(.+)$');
+  // validation
+  const { validateUrl, getVideoId, validateInput } = useValidate();
 
   const onChange = (e) => {
     setErrorMessage('');
@@ -29,33 +23,42 @@ const InputForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const isInputEmpty = inputText === '';
-    // const isInputValid = {};
-    if (isInputEmpty) {
-      setErrorMessage('You forgot to pass something!');
-      return;
-    }
+    // console.log(validateUrl(inputText));
+    // console.log(getVideoId(inputText));
+    // if (ValidateInput()) {
+    //   console.log('przeszło');
+    // podać vimeo/youtube
     dispatch(fetchVideoById(inputText));
+    // }
+
     setInputText('');
   };
 
   return (
     <Form style={{ width: '60%', margin: '0 auto' }} onSubmit={onSubmit}>
+      <FormGroup>
+        <Input
+          type="select"
+          name="select"
+          id="inputTypeSelect"
+          onChange={(e) => setInputType(e.target.value)}
+        >
+          <option value="id">ID</option>
+          <option value="url">URL</option>
+        </Input>
+      </FormGroup>
       <FormGroup className="position-relative">
-        <Label for="clipName">Add new clip:</Label>
         <Input
           className="mb-4"
           invalid={errorMessage !== ''}
           type="text"
           name="clipName"
           id="clipName"
-          placeholder="Paste in clip ID or URL..."
+          placeholder={`Paste in clip ${inputType}...`}
           value={inputText}
           onChange={onChange}
         />
-        <FormFeedback style={{ margin: '0 auto' }} tooltip>
-          {errorMessage}
-        </FormFeedback>
+        <FormFeedback tooltip>{errorMessage}</FormFeedback>
       </FormGroup>
       <Button className="m-2" type="submit" color="primary">
         Add Clip

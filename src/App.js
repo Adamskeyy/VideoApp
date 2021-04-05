@@ -1,7 +1,7 @@
 // components
 import Header from './components/Header';
 import InputForm from './components/InputForm';
-import CustomVideoListModal from './components/CustomVideoListModal';
+// import CustomVideoListModal from './components/CustomVideoListModal';
 import VideoList from './components/VideoList';
 // styles
 import './App.css';
@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <Header />
       <InputForm />
-      <CustomVideoListModal />
+      {/* <CustomVideoListModal /> */}
       <VideoList />
     </div>
   );

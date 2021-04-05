@@ -1,5 +1,6 @@
 // redux
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 // axios
 import axios from 'axios';
 // moment
@@ -12,20 +13,29 @@ import {
   deleteVideoFromStorage,
   clearVideosFromStorage,
 } from '../helpers/localStorage';
+// fetchVimeo
+// import { fetchVimeoVideoById } from '../api/vimeo';
+// youtube endpoint
+import { youtubeEndpoint } from '../api/youtube';
 
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
   (videoId, { dispatch }) => {
-    // wstrzykiwać do geta URL na podstawie inputu - dostosować do vimeo/youtube i podać ID + klucz
-    axios
-      .get(
-        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&part=snippet,statistics`
-      )
-      .then((res) => {
-        let videoData = res.data.items[0];
-        dispatch(addVideo(videoData));
-      })
-      .catch((err) => err);
+    const isYoutube = useSelector((state) => state.isYoutube);
+    // if isYoutube
+    if (isYoutube) {
+      axios
+        .get(youtubeEndpoint(videoId))
+        .then((res) => {
+          let videoData = res.data.items[0];
+          dispatch(addVideo(videoData));
+        })
+        .catch((err) => err);
+    }
+
+    // if isVimeo
+    // fetchVimeoVideoById(videoId);
+    // then res/error
   }
 );
 
@@ -45,8 +55,6 @@ const videoAppSlice = createSlice({
       state.videos = getVideosFromStorage();
     },
     addVideo: (state, { payload }) => {
-      // check if videoid already in state
-      // create error message if it is and pass it to input
       let video;
       // youtube videos
       if (state.isYoutube) {

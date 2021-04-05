@@ -22,22 +22,20 @@ const VideoList = () => {
   const [showFavourites, setShowFavourites] = useState(false);
   // pagination
   const [selectedPage, setSelectedPage] = useState(1);
-
-  useEffect(() => {
-    dispatch(fetchVideos());
-  }, [dispatch]);
-
   const from = (selectedPage - 1) * ITEMS_PER_PAGE;
   const to = selectedPage * ITEMS_PER_PAGE;
   const videosToDisplay = videos.filter((v) => !showFavourites || v.favourite);
   const videosOnCurrentPage = videosToDisplay.slice(from, to);
+
+  useEffect(() => {
+    dispatch(fetchVideos());
+  }, [dispatch]);
 
   const handleSelected = (selectedPage) => {
     setSelectedPage(selectedPage);
   };
 
   const handleFavouriteFilter = () => {
-    // wróć na pierwszą stronę
     setShowFavourites((prev) => !prev);
   };
 
@@ -46,10 +44,6 @@ const VideoList = () => {
     favouriteIconClasses = 'fa fa-star checked';
   }
 
-  // videos in filter - wszystkie/favourites
-  // videos to show in current page - max_per_page
-
-  // wygenerować listę z samymi favourites
   const videoList = videosToDisplay.length ? (
     <ListGroup horizontal={isCardLayout}>
       {videosOnCurrentPage.map((video) => (
@@ -84,14 +78,19 @@ const VideoList = () => {
     </div>
   );
 
+  const pagination = videosToDisplay.length ? (
+    <PaginationComponent
+      defaultActivePage={selectedPage}
+      totalItems={videosToDisplay.length}
+      pageSize={ITEMS_PER_PAGE}
+      onSelect={handleSelected}
+    />
+  ) : null;
+
   return (
     <>
       {controlButtons}
-      <PaginationComponent
-        totalItems={videosToDisplay.length}
-        pageSize={ITEMS_PER_PAGE}
-        onSelect={handleSelected}
-      />
+      {pagination}
       {videoList}
     </>
   );
