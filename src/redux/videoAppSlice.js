@@ -17,43 +17,49 @@ import {
 import { vimeoEndpoint } from '../api/vimeo';
 // youtube endpoint
 import { youtubeEndpoint } from '../api/youtube';
-
+// constants
 export const OLDEST = 'oldest';
 export const NEWEST = 'newest';
 export const VIMEO = 'vimeo';
 export const YOUTUBE = 'youtube';
 
-// osobno vimeo i youtube?
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
-  ({videoId, origin}, { dispatch }) => {
-
+  ({ videoId, origin }, { dispatch }) => {
     if (origin === YOUTUBE) {
-    axios
-      .get(youtubeEndpoint(videoId))
-      .then((res) => {
-        let videoData = res.data.items[0];
-        dispatch(addVideo(videoData));
-      })
-      .catch((err) => err);
+      axios
+        .get(youtubeEndpoint(videoId))
+        .then((res) => {
+          let videoData = res.data.items[0];
+          dispatch(addVideo(videoData));
+        })
+        .catch((err) => {
+          // to improve
+          if (err) {
+            dispatch(setErrorMessage('Video not found!'));
+          }
+        });
     }
 
     if (origin === VIMEO) {
-
-      axios.get(vimeoEndpoint(videoId), {
-      headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_VIMEO_ACCESS_TOKEN}`
-      }
-      }).then(res => {
-        // dispatch(addVideo(res));
-        console.log(res.data)
-      }).catch(err => console.log(err))
-
+      axios
+        .get(vimeoEndpoint(videoId), {
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_VIMEO_ACCESS_TOKEN}`,
+          },
+        })
+        .then((res) => {
+          // dispatch(addVideo(res));
+          console.log(res.data);
+        })
+        .catch((err) => {
+          if (err.response.status === 404) {
+            dispatch(setErrorMessage('Video not found!'));
+          }
+        });
     }
   }
 );
-
-
 
 const videoAppSlice = createSlice({
   name: 'videoApp',
@@ -90,7 +96,6 @@ const videoAppSlice = createSlice({
           },
         ];
         storeVideo(video);
-        return;
       }
       // vimeo videos - zredukować kod (DRY)
       if (state.originSite === VIMEO) {
@@ -104,7 +109,7 @@ const videoAppSlice = createSlice({
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
         };
-        state.videos.push(video)
+        state.videos.push(video);
         storeVideo(video);
       }
     },

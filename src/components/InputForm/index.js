@@ -4,8 +4,11 @@ import { Input, Button, Form, FormGroup, FormFeedback } from 'reactstrap';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
-import { fetchVideoById, 
-  setErrorMessage} from '../../redux/videoAppSlice';
+import {
+  fetchVideoById,
+  setErrorMessage,
+  setOriginSite,
+} from '../../redux/videoAppSlice';
 // validation
 import useValidate from '../../hooks/useValidate';
 
@@ -15,8 +18,13 @@ const InputForm = () => {
   const [inputText, setInputText] = useState('');
   const [inputType, setInputType] = useState('id');
   // validation
-  const { validateInput, getVideoId, checkForUniqueId, getOriginSiteFromId,
-    getOriginSiteFromUrl } = useValidate();
+  const {
+    validateInput,
+    getVideoId,
+    checkForUniqueId,
+    getOriginSiteFromId,
+    getOriginSiteFromUrl,
+  } = useValidate();
 
   const onChange = (e) => {
     dispatch(setErrorMessage(''));
@@ -31,8 +39,12 @@ const InputForm = () => {
       videoId = getVideoId(inputText);
     }
     if (validated && checkForUniqueId(videoId)) {
-      const origin = inputType === 'id' ? getOriginSiteFromId(inputText) : getOriginSiteFromUrl(inputText);
-      dispatch(fetchVideoById({videoId, origin}));
+      const origin =
+        inputType === 'id'
+          ? getOriginSiteFromId(inputText)
+          : getOriginSiteFromUrl(inputText);
+      dispatch(setOriginSite(origin));
+      dispatch(fetchVideoById({ videoId, origin }));
     }
     setInputText('');
   };
@@ -47,7 +59,7 @@ const InputForm = () => {
     <Form style={{ width: '60%', margin: '0 auto' }} onSubmit={onSubmit}>
       <FormGroup>
         <Input
-          type="select" 
+          type="select"
           name="select"
           id="inputTypeSelect"
           value={inputType}
