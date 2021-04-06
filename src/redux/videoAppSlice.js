@@ -22,6 +22,8 @@ import { youtubeEndpoint } from '../api/youtube';
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
   (videoId, { dispatch }) => {
+    // const originSite = 'youtube';
+
     axios
       .get(youtubeEndpoint(videoId))
       .then((res) => {
@@ -29,8 +31,9 @@ export const fetchVideoById = createAsyncThunk(
         dispatch(addVideo(videoData));
       })
       .catch((err) => err);
-    // console.log('fetchuję youtube');
+
     // if (originSite === 'youtube') {
+    //   console.log('fetchuję youtube');
     // }
 
     // if (originSite === 'vimeo') {

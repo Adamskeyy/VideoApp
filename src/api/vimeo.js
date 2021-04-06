@@ -9,6 +9,8 @@ export const fetchVimeoVideoById = (videoId) => {
     `${process.env.REACT_APP_VIMEO_ACCESS_TOKEN}`
   );
 
+  let response;
+
   client.request(
     {
       method: 'GET',
@@ -16,17 +18,21 @@ export const fetchVimeoVideoById = (videoId) => {
       query: {
         page: 1,
         per_page: 10,
-        fields: 'uri,name, description, duration,created_time,modified_time',
+        fields: 'uri, name, description, duration, created_time, modified_time',
       },
     },
     (error, body, status_code, headers) => {
       if (error) {
         console.log(error);
+        response = error;
         return error;
       }
 
+      response = body;
       console.log(body);
       return body;
     }
   );
+
+  return response;
 };
