@@ -10,11 +10,11 @@ import useValidate from '../../hooks/useValidate';
 
 const InputForm = () => {
   const dispatch = useDispatch();
-  const errorMessage = useSelector((state) => state.videoApp.errorMessage);
+  const { errorMessage, originSite } = useSelector((state) => state.videoApp);
   const [inputText, setInputText] = useState('');
   const [inputType, setInputType] = useState('id');
   // validation
-  const { getVideoId, validateInput } = useValidate();
+  const { validateInput, getVideoId, checkForUniqueId } = useValidate();
 
   const onChange = (e) => {
     dispatch(setErrorMessage(''));
@@ -23,18 +23,16 @@ const InputForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     const validated = validateInput(inputText, inputType);
     let videoId = inputText;
     if (validated && inputType === 'url') {
       videoId = getVideoId(inputText);
     }
-    console.log(validated);
-    console.log(videoId);
-    // if (validateInput() === 'jfgkjhglkjlkl;') {
-    //   dispatch(fetchVideoById(videoId));
-    // }
-
+    if (validated && checkForUniqueId(videoId)) {
+      console.log('fetch');
+      console.log(originSite);
+      dispatch(fetchVideoById(videoId));
+    }
     setInputText('');
   };
 

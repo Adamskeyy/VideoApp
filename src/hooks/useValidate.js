@@ -4,12 +4,10 @@ import { setErrorMessage, setOriginSite } from '../redux/videoAppSlice';
 
 const useValidate = () => {
   const videos = useSelector((state) => state.videoApp.videos);
-  const originSite = useSelector((state) => state.videoApp.originSite);
   const dispatch = useDispatch();
 
   const validateYouTubeUrl = (url) => {
-    // sprawdzić regexp
-    const regExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})?$/;
     if (url.match(regExp)) {
       return true;
     }
@@ -17,7 +15,6 @@ const useValidate = () => {
   };
 
   const validateVimeoUrl = (url) => {
-    // sprawdzić regexp
     const regExp = /https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
     if (url.match(regExp)) {
       return true;
@@ -27,12 +24,10 @@ const useValidate = () => {
 
   const isUrlValid = (url) => {
     if (validateYouTubeUrl(url)) {
-      console.log('yt: ', validateYouTubeUrl(url));
       dispatch(setOriginSite('youtube'));
       return true;
     }
     if (validateVimeoUrl(url)) {
-      console.log('vimeo: ', validateVimeoUrl(url));
       dispatch(setOriginSite('vimeo'));
       return true;
     }
@@ -42,13 +37,12 @@ const useValidate = () => {
 
   const isIdValid = (id) => {
     const numbersOnlyString = /^\d+$/.test(id);
-
-    // id doesn't contain purely numbers and its length === 11 it's youtube id
+    // if id doesn't contain only numbers and its length === 11 it's youtube id
     if (id.length === 11 && !numbersOnlyString) {
       dispatch(setOriginSite('youtube'));
       return true;
     }
-    // id contain purely numbers it's vimeo id
+    // if id contain purely numbers it's vimeo id
     if (numbersOnlyString) {
       dispatch(setOriginSite('vimeo'));
       return true;
@@ -57,24 +51,28 @@ const useValidate = () => {
     return false;
   };
 
+  const checkForUniqueId = (id) => {
+    if (videos.some((video) => video.id === id)) {
+      dispatch(setErrorMessage('Video already in database!'));
+      return false;
+    }
+    return true;
+  };
+
   const validateInput = (inputText, inputType) => {
     const isInputEmpty = inputText === '';
     if (isInputEmpty) {
       dispatch(setErrorMessage('You forgot to pass something!'));
       return false;
     }
-    if (inputType === 'url') {
-      return isUrlValid(inputText);
-    }
+
     if (inputType === 'id') {
       return isIdValid(inputText);
     }
 
-    if (videos.map((video) => video.id === inputText)) {
-      dispatch(setErrorMessage('Video already in database!'));
-      return false;
+    if (inputType === 'url') {
+      return isUrlValid(inputText);
     }
-    return true;
   };
 
   // get Id if input === url
@@ -86,8 +84,9 @@ const useValidate = () => {
   };
 
   return {
-    getVideoId,
     validateInput,
+    getVideoId,
+    checkForUniqueId,
   };
 };
 

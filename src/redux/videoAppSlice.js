@@ -1,6 +1,6 @@
 // redux
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 // axios
 import axios from 'axios';
 // moment
@@ -18,31 +18,32 @@ import {
 // youtube endpoint
 import { youtubeEndpoint } from '../api/youtube';
 
+// osobno vimeo i youtube?
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
   (videoId, { dispatch }) => {
-    const isYoutube = useSelector((state) => state.isYoutube);
-    // if isYoutube
-    if (isYoutube) {
-      axios
-        .get(youtubeEndpoint(videoId))
-        .then((res) => {
-          let videoData = res.data.items[0];
-          dispatch(addVideo(videoData));
-        })
-        .catch((err) => err);
-    }
+    axios
+      .get(youtubeEndpoint(videoId))
+      .then((res) => {
+        let videoData = res.data.items[0];
+        dispatch(addVideo(videoData));
+      })
+      .catch((err) => err);
+    // console.log('fetchuję youtube');
+    // if (originSite === 'youtube') {
+    // }
 
-    // if isVimeo
+    // if (originSite === 'vimeo') {
     // fetchVimeoVideoById(videoId);
-    // then res/error
+    //   console.log('fetchuję vimeo');
+    // }
   }
 );
 
 const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
-    originSite: 'youtube',
+    originSite: '',
     videos: [],
     errorMessage: '',
     loading: false,
@@ -56,6 +57,7 @@ const videoAppSlice = createSlice({
       // youtube videos
       if (state.originSite === 'youtube') {
         video = {
+          origin: state.originSite,
           id: payload.id,
           title: payload.snippet.title,
           views: payload.statistics.viewCount,
@@ -77,6 +79,7 @@ const videoAppSlice = createSlice({
       // vimeo videos - zredukować kod (DRY)
       if (state.originSite === 'vimeo') {
         video = {
+          origin: state.originSite,
           id: payload.id,
           title: '',
           likes: '',
@@ -134,7 +137,7 @@ const videoAppSlice = createSlice({
       state.errorMessage = action.payload;
     },
     setOriginSite: (state, action) => {
-      state.isYoutube = action.payload;
+      state.originSite = action.payload;
     },
   },
   extraReducers: {

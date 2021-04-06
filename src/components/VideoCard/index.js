@@ -11,6 +11,7 @@ import VideoModal from '../VideoModal';
 const VideoCard = ({ video }) => {
   const dispatch = useDispatch();
   const { id, title, views, likes, addedAt, thumbnail, favourite } = video;
+  // origin
 
   const handleToggleFavourite = () => {
     const toggledFavourite = {
@@ -26,6 +27,8 @@ const VideoCard = ({ video }) => {
   }
 
   // onClick na img otwarcie modalu i możliwość odtworzenia filmu
+  // render videoCard na podstawie origin
+
   return (
     <ListGroupItem>
       <img
