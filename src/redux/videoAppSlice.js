@@ -42,10 +42,15 @@ export const fetchVideoById = createAsyncThunk(
       const vimeoResponse = fetchVimeoVideoById(videoId);
       console.log(vimeoResponse);
 
-    }
+      axios.get(`https://api.vimeo.com/videos/${videoId}?page=1&per_page=10&fields=uri%2C%20name%2C%20description%2C%20duration%2C%20created_time%2C%20modified_time`, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_VIMEO_ACCESS_TOKEN}`
+      }
+      }).then(res => console.log(res)).catch(err => console.log(err))
 
-      console.log('fetchuję vimeo');
-    
+      // Access-Control-Allow-Credentials: true
+
+    }
   }
 );
 
