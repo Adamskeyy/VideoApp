@@ -10,8 +10,17 @@ import VideoModal from '../VideoModal';
 
 const VideoCard = ({ video }) => {
   const dispatch = useDispatch();
-  const { id, title, views, likes, addedAt, thumbnail, favourite } = video;
-  // origin
+  const {
+    id,
+    title,
+    views,
+    likes,
+    addedAt,
+    thumbnail,
+    favourite,
+    origin,
+    iframe,
+  } = video;
 
   const handleToggleFavourite = () => {
     const toggledFavourite = {
@@ -28,20 +37,22 @@ const VideoCard = ({ video }) => {
 
   // onClick na img otwarcie modalu i możliwość odtworzenia filmu
   // render videoCard na podstawie origin
+  const thumbnailRedirect =
+    origin === 'youtube'
+      ? `https://www.youtube.com/watch?v=${id}`
+      : `https://vimeo.com/${id}`;
 
   return (
     <ListGroupItem>
       <img
         style={{ cursor: 'pointer' }}
-        onClick={() =>
-          window.open(`https://www.youtube.com/watch?v=${id}`, '_blank')
-        }
+        onClick={() => window.open(thumbnailRedirect, '_blank')}
         src={thumbnail}
         alt={title}
       />
-      <VideoModal videoId={video.id} />
+      <VideoModal videoId={id} origin={origin} iframe={iframe} title={title} />
       <h5>{title}</h5>
-      <p>Views: {views}</p>
+      {origin === 'youtube' ? <p>Views: {views}</p> : null}
       <p>Likes: {likes}</p>
       <p>Added: {addedAt}</p>
       <Button onClick={handleToggleFavourite} color="secondary">

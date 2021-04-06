@@ -49,11 +49,12 @@ export const fetchVideoById = createAsyncThunk(
           },
         })
         .then((res) => {
-          // dispatch(addVideo(res));
-          console.log(res.data);
+          let videoData = { ...res.data, videoId };
+          dispatch(addVideo(videoData));
         })
         .catch((err) => {
-          if (err.response.status === 404) {
+          // to improve
+          if (err) {
             dispatch(setErrorMessage('Video not found!'));
           }
         });
@@ -89,22 +90,17 @@ const videoAppSlice = createSlice({
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
         };
-        state.videos = [
-          ...state.videos,
-          {
-            ...video,
-          },
-        ];
+        state.videos.push(video);
         storeVideo(video);
       }
       // vimeo videos - zredukować kod (DRY)
       if (state.originSite === VIMEO) {
         video = {
           origin: state.originSite,
-          id: payload.id,
-          title: '',
-          likes: '',
-          thumbnail: '',
+          id: payload.videoId,
+          title: payload.name,
+          likes: payload.metadata.connections.likes.total,
+          thumbnail: payload.pictures.sizes[0].link,
           rawDateTime: moment(),
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
