@@ -14,7 +14,7 @@ import {
   clearVideosFromStorage,
 } from '../helpers/localStorage';
 // fetchVimeo
-import { fetchVimeoVideoById } from '../api/vimeo';
+import { vimeoEndpoint } from '../api/vimeo';
 // youtube endpoint
 import { youtubeEndpoint } from '../api/youtube';
 
@@ -39,16 +39,15 @@ export const fetchVideoById = createAsyncThunk(
     }
 
     if (origin === VIMEO) {
-      const vimeoResponse = fetchVimeoVideoById(videoId);
-      console.log(vimeoResponse);
 
-      axios.get(`https://api.vimeo.com/videos/${videoId}?page=1&per_page=10&fields=uri%2C%20name%2C%20description%2C%20duration%2C%20created_time%2C%20modified_time`, {
+      axios.get(vimeoEndpoint(videoId), {
       headers: {
         Authorization: `Bearer ${process.env.REACT_APP_VIMEO_ACCESS_TOKEN}`
       }
-      }).then(res => console.log(res)).catch(err => console.log(err))
-
-      // Access-Control-Allow-Credentials: true
+      }).then(res => {
+        // dispatch(addVideo(res));
+        console.log(res.data)
+      }).catch(err => console.log(err))
 
     }
   }
