@@ -14,16 +14,21 @@ import {
   clearVideosFromStorage,
 } from '../helpers/localStorage';
 // fetchVimeo
-// import { fetchVimeoVideoById } from '../api/vimeo';
+import { fetchVimeoVideoById } from '../api/vimeo';
 // youtube endpoint
 import { youtubeEndpoint } from '../api/youtube';
+
+export const OLDEST = 'oldest';
+export const NEWEST = 'newest';
+export const VIMEO = 'vimeo';
+export const YOUTUBE = 'youtube';
 
 // osobno vimeo i youtube?
 export const fetchVideoById = createAsyncThunk(
   'videoApp/fetchVideoById',
-  (videoId, { dispatch }) => {
-    // const originSite = 'youtube';
+  ({videoId, origin}, { dispatch }) => {
 
+    if (origin === YOUTUBE) {
     axios
       .get(youtubeEndpoint(videoId))
       .then((res) => {
@@ -31,21 +36,25 @@ export const fetchVideoById = createAsyncThunk(
         dispatch(addVideo(videoData));
       })
       .catch((err) => err);
+    }
 
-    // if (originSite === 'youtube') {
-    //   console.log('fetchuję youtube');
-    // }
+    if (origin === VIMEO) {
+      const vimeoResponse = fetchVimeoVideoById(videoId);
+      console.log(vimeoResponse);
 
-    // if (originSite === 'vimeo') {
-    // fetchVimeoVideoById(videoId);
-    //   console.log('fetchuję vimeo');
-    // }
+    }
+
+      console.log('fetchuję vimeo');
+    
   }
 );
+
+
 
 const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
+    sortType: OLDEST,
     originSite: '',
     videos: [],
     errorMessage: '',
@@ -58,7 +67,7 @@ const videoAppSlice = createSlice({
     addVideo: (state, { payload }) => {
       let video;
       // youtube videos
-      if (state.originSite === 'youtube') {
+      if (state.originSite === YOUTUBE) {
         video = {
           origin: state.originSite,
           id: payload.id,
@@ -80,7 +89,7 @@ const videoAppSlice = createSlice({
         return;
       }
       // vimeo videos - zredukować kod (DRY)
-      if (state.originSite === 'vimeo') {
+      if (state.originSite === VIMEO) {
         video = {
           origin: state.originSite,
           id: payload.id,
@@ -91,12 +100,7 @@ const videoAppSlice = createSlice({
           addedAt: moment().format('DD.MM.YYYY, kk:mm'),
           favourite: false,
         };
-        state.videos = [
-          ...state.videos,
-          {
-            ...video,
-          },
-        ];
+        state.videos.push(video)
         storeVideo(video);
       }
     },
@@ -117,24 +121,10 @@ const videoAppSlice = createSlice({
       });
     },
     sortByOldest: (state) => {
-      const newOrder = [
-        ...state.videos.sort(
-          (a, b) =>
-            new Date(a.rawDateTime).getTime() -
-            new Date(b.rawDateTime).getTime()
-        ),
-      ];
-      state.videos = newOrder;
+      state.sortType = OLDEST;
     },
     sortByNewest: (state) => {
-      const newOrder = [
-        ...state.videos.sort(
-          (a, b) =>
-            new Date(b.rawDateTime).getTime() -
-            new Date(a.rawDateTime).getTime()
-        ),
-      ];
-      state.videos = newOrder;
+      state.sortType = NEWEST;
     },
     setErrorMessage: (state, action) => {
       state.errorMessage = action.payload;

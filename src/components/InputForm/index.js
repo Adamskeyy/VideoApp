@@ -4,17 +4,19 @@ import { Input, Button, Form, FormGroup, FormFeedback } from 'reactstrap';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
-import { fetchVideoById, setErrorMessage } from '../../redux/videoAppSlice';
+import { fetchVideoById, 
+  setErrorMessage} from '../../redux/videoAppSlice';
 // validation
 import useValidate from '../../hooks/useValidate';
 
 const InputForm = () => {
   const dispatch = useDispatch();
-  const { errorMessage, originSite } = useSelector((state) => state.videoApp);
+  const { errorMessage } = useSelector((state) => state.videoApp);
   const [inputText, setInputText] = useState('');
   const [inputType, setInputType] = useState('id');
   // validation
-  const { validateInput, getVideoId, checkForUniqueId } = useValidate();
+  const { validateInput, getVideoId, checkForUniqueId, getOriginSiteFromId,
+    getOriginSiteFromUrl } = useValidate();
 
   const onChange = (e) => {
     dispatch(setErrorMessage(''));
@@ -29,18 +31,23 @@ const InputForm = () => {
       videoId = getVideoId(inputText);
     }
     if (validated && checkForUniqueId(videoId)) {
-      console.log('fetch');
-      console.log(originSite);
-      dispatch(fetchVideoById(videoId));
+      const origin = inputType === 'id' ? getOriginSiteFromId(inputText) : getOriginSiteFromUrl(inputText);
+      dispatch(fetchVideoById({videoId, origin}));
     }
     setInputText('');
   };
+
+  // select // toggle - jedno kliknięcie zamiast dwóch
+  // add clip w jednej lini z inputem
+  // filter by favourites - do buttona
+  // paginacja na dół
+  // sortowanie i filter by tuż nad listę
 
   return (
     <Form style={{ width: '60%', margin: '0 auto' }} onSubmit={onSubmit}>
       <FormGroup>
         <Input
-          type="select"
+          type="select" 
           name="select"
           id="inputTypeSelect"
           value={inputType}

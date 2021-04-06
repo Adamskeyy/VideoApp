@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 // redux
 import { fetchVideos, clearVideoList } from '../../redux/videoAppSlice';
+// selectors
+import { videoSortSelector } from '../../redux/selectors'
 // components
 import VideoCard from '../VideoCard';
 import SortBy from '../SortBy';
@@ -16,7 +18,9 @@ const ITEMS_PER_PAGE = 3;
 const VideoList = () => {
   // video state
   const dispatch = useDispatch();
-  const videos = useSelector((state) => state.videoApp.videos);
+  // const videos = useSelector(state => state.videoApp.videos);
+  const videos = useSelector(videoSortSelector);
+
   // UI state
   const [isCardLayout, setIsCardLayout] = useState(false);
   const [showFavourites, setShowFavourites] = useState(false);

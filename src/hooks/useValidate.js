@@ -1,6 +1,7 @@
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import { setErrorMessage, setOriginSite } from '../redux/videoAppSlice';
+import {VIMEO, YOUTUBE} from '../redux/videoAppSlice'
 
 const useValidate = () => {
   const videos = useSelector((state) => state.videoApp.videos);
@@ -24,11 +25,11 @@ const useValidate = () => {
 
   const isUrlValid = (url) => {
     if (validateYouTubeUrl(url)) {
-      dispatch(setOriginSite('youtube'));
+      dispatch(setOriginSite(YOUTUBE));
       return true;
     }
     if (validateVimeoUrl(url)) {
-      dispatch(setOriginSite('vimeo'));
+      dispatch(setOriginSite(VIMEO));
       return true;
     }
     dispatch(setErrorMessage('Invalid Video URL!'));
@@ -39,12 +40,12 @@ const useValidate = () => {
     const numbersOnlyString = /^\d+$/.test(id);
     // if id doesn't contain only numbers and its length === 11 it's youtube id
     if (id.length === 11 && !numbersOnlyString) {
-      dispatch(setOriginSite('youtube'));
+      dispatch(setOriginSite(YOUTUBE));
       return true;
     }
     // if id contain purely numbers it's vimeo id
     if (numbersOnlyString) {
-      dispatch(setOriginSite('vimeo'));
+      dispatch(setOriginSite(VIMEO));
       return true;
     }
     dispatch(setErrorMessage('Invalid Video ID!'));
@@ -58,6 +59,25 @@ const useValidate = () => {
     }
     return true;
   };
+
+  const getOriginSiteFromId = (id) => {
+    const numbersOnlyString = /^\d+$/.test(id);
+    if (id.length === 11 && !numbersOnlyString) {
+      return 'youtube';
+    }
+    if (numbersOnlyString) {
+      return 'vimeo';
+    }
+  }
+
+  const getOriginSiteFromUrl = (url) => {
+    if (validateYouTubeUrl(url)) {
+      return 'youtube';
+    }
+    if (validateVimeoUrl(url)) {
+      return 'vimeo';
+    }
+  }
 
   const validateInput = (inputText, inputType) => {
     const isInputEmpty = inputText === '';
@@ -87,6 +107,8 @@ const useValidate = () => {
     validateInput,
     getVideoId,
     checkForUniqueId,
+    getOriginSiteFromId,
+    getOriginSiteFromUrl
   };
 };
 
