@@ -2,33 +2,37 @@
 import { Input, Button, Form, FormGroup, FormFeedback } from 'reactstrap';
 // hooks
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // redux
-import { fetchVideoById } from '../../redux/videoAppSlice';
+import { fetchVideoById, setErrorMessage } from '../../redux/videoAppSlice';
 // validation
 import useValidate from '../../hooks/useValidate';
 
 const InputForm = () => {
   const dispatch = useDispatch();
+  const errorMessage = useSelector((state) => state.videoApp.errorMessage);
   const [inputText, setInputText] = useState('');
-  const [inputType, setInputType] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [inputType, setInputType] = useState('id');
   // validation
-  const { validateUrl, getVideoId, validateInput } = useValidate();
+  const { getVideoId, validateInput } = useValidate();
 
   const onChange = (e) => {
-    setErrorMessage('');
+    dispatch(setErrorMessage(''));
     setInputText(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // console.log(validateUrl(inputText));
-    // console.log(getVideoId(inputText));
-    // if (ValidateInput()) {
-    //   console.log('przeszło');
-    // podać vimeo/youtube
-    dispatch(fetchVideoById(inputText));
+
+    const validated = validateInput(inputText, inputType);
+    let videoId = inputText;
+    if (validated && inputType === 'url') {
+      videoId = getVideoId(inputText);
+    }
+    console.log(validated);
+    console.log(videoId);
+    // if (validateInput() === 'jfgkjhglkjlkl;') {
+    //   dispatch(fetchVideoById(videoId));
     // }
 
     setInputText('');
@@ -41,6 +45,7 @@ const InputForm = () => {
           type="select"
           name="select"
           id="inputTypeSelect"
+          value={inputType}
           onChange={(e) => setInputType(e.target.value)}
         >
           <option value="id">ID</option>

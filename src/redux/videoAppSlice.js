@@ -42,22 +42,19 @@ export const fetchVideoById = createAsyncThunk(
 const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
-    isYoutube: true,
+    originSite: 'youtube',
     videos: [],
-    error: null,
+    errorMessage: '',
     loading: false,
   },
   reducers: {
-    switchVideoSite: (state) => {
-      state.isYoutube = !state.isYoutube;
-    },
     fetchVideos: (state) => {
       state.videos = getVideosFromStorage();
     },
     addVideo: (state, { payload }) => {
       let video;
       // youtube videos
-      if (state.isYoutube) {
+      if (state.originSite === 'youtube') {
         video = {
           id: payload.id,
           title: payload.snippet.title,
@@ -78,22 +75,24 @@ const videoAppSlice = createSlice({
         return;
       }
       // vimeo videos - zredukować kod (DRY)
-      video = {
-        id: payload.id,
-        title: '',
-        likes: '',
-        thumbnail: '',
-        rawDateTime: moment(),
-        addedAt: moment().format('DD.MM.YYYY, kk:mm'),
-        favourite: false,
-      };
-      state.videos = [
-        ...state.videos,
-        {
-          ...video,
-        },
-      ];
-      storeVideo(video);
+      if (state.originSite === 'vimeo') {
+        video = {
+          id: payload.id,
+          title: '',
+          likes: '',
+          thumbnail: '',
+          rawDateTime: moment(),
+          addedAt: moment().format('DD.MM.YYYY, kk:mm'),
+          favourite: false,
+        };
+        state.videos = [
+          ...state.videos,
+          {
+            ...video,
+          },
+        ];
+        storeVideo(video);
+      }
     },
     removeVideo: (state, { payload }) => {
       deleteVideoFromStorage(payload);
@@ -131,6 +130,12 @@ const videoAppSlice = createSlice({
       ];
       state.videos = newOrder;
     },
+    setErrorMessage: (state, action) => {
+      state.errorMessage = action.payload;
+    },
+    setOriginSite: (state, action) => {
+      state.isYoutube = action.payload;
+    },
   },
   extraReducers: {
     [fetchVideoById.pending]: (state, action) => {
@@ -146,7 +151,6 @@ const videoAppSlice = createSlice({
 });
 
 export const {
-  switchVideoSite,
   fetchVideos,
   addVideo,
   removeVideo,
@@ -154,6 +158,8 @@ export const {
   toggleFavourite,
   sortByNewest,
   sortByOldest,
+  setErrorMessage,
+  setOriginSite,
 } = videoAppSlice.actions;
 
 export default videoAppSlice.reducer;
