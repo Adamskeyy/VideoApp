@@ -13,7 +13,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-moment": "^1.1.1",
-    "react-paginate": "^7.1.2",
     "react-reactstrap-pagination": "^2.0.3",
     "react-redux": "^7.2.3",
     "react-scripts": "4.0.3",
@@ -22,7 +21,6 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "vimeo": "^2.1.1",
-    "vimeo-regex": "^1.0.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

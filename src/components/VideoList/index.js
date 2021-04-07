@@ -21,7 +21,7 @@ const VideoList = () => {
   const dispatch = useDispatch();
   const videos = useSelector(videoSortSelector);
   // UI state
-  const [isListLayout, setIsListLayout] = useState(true);
+  const [isListLayout, setIsListLayout] = useState(false);
   const [showFavourites, setShowFavourites] = useState(false);
   // pagination
   const [selectedPage, setSelectedPage] = useState(1);

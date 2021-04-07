@@ -10,8 +10,8 @@ import {
 import './InputForm.css';
 // hooks
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 // redux
+import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchVideoById,
   setErrorMessage,
@@ -56,11 +56,6 @@ const InputForm = () => {
     }
     setInputText('');
   };
-
-  // add clip w jednej lini z inputem
-  // filter by favourites - do buttona
-  // paginacja na dół
-  // sortowanie i filter by tuż nad listę
 
   return (
     <Form className="inputForm" onSubmit={onSubmit}>

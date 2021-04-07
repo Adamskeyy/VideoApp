@@ -1,6 +1,6 @@
 // hooks
 import { useState } from 'react';
-// reactstrap/styles
+// reactstrap
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 // redux
 import { useDispatch } from 'react-redux';

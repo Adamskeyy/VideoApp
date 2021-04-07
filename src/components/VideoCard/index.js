@@ -1,4 +1,4 @@
-// reactstrap/styles
+// reactstrap
 import {
   Button,
   Card,
@@ -8,9 +8,8 @@ import {
   CardSubtitle,
 } from 'reactstrap';
 import './VideoCard.css';
-// hooks
-import { useDispatch } from 'react-redux';
 // redux
+import { useDispatch } from 'react-redux';
 import { removeVideo, toggleFavourite } from '../../redux/videoAppSlice';
 // components
 import VideoModal from '../VideoModal';

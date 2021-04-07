@@ -1,6 +1,5 @@
 // redux
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { useSelector } from 'react-redux';
 // axios
 import axios from 'axios';
 // moment
@@ -13,7 +12,7 @@ import {
   deleteVideoFromStorage,
   clearVideosFromStorage,
 } from '../helpers/localStorage';
-// fetchVimeo
+// vimeo endpoint
 import { vimeoEndpoint } from '../api/vimeo';
 // youtube endpoint
 import { youtubeEndpoint } from '../api/youtube';
@@ -77,7 +76,6 @@ const videoAppSlice = createSlice({
     },
     addVideo: (state, { payload }) => {
       let video;
-      // youtube videos
       if (state.originSite === YOUTUBE) {
         video = {
           origin: state.originSite,
@@ -93,7 +91,6 @@ const videoAppSlice = createSlice({
         state.videos.push(video);
         storeVideo(video);
       }
-      // vimeo videos - zredukować kod (DRY)
       if (state.originSite === VIMEO) {
         video = {
           origin: state.originSite,
