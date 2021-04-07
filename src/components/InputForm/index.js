@@ -1,5 +1,13 @@
-// reactstrap
-import { Input, Button, Form, FormGroup, FormFeedback } from 'reactstrap';
+// reactstrap / styles
+import {
+  Input,
+  ButtonGroup,
+  Button,
+  Form,
+  FormGroup,
+  FormFeedback,
+} from 'reactstrap';
+import './InputForm.css';
 // hooks
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,42 +57,52 @@ const InputForm = () => {
     setInputText('');
   };
 
-  // select // toggle - jedno kliknięcie zamiast dwóch
   // add clip w jednej lini z inputem
   // filter by favourites - do buttona
   // paginacja na dół
   // sortowanie i filter by tuż nad listę
 
   return (
-    <Form style={{ width: '60%', margin: '0 auto' }} onSubmit={onSubmit}>
+    <Form className="inputForm" onSubmit={onSubmit}>
       <FormGroup>
-        <Input
-          type="select"
-          name="select"
-          id="inputTypeSelect"
-          value={inputType}
-          onChange={(e) => setInputType(e.target.value)}
+        <ButtonGroup>
+          <Button
+            active={inputType === 'url'}
+            outline
+            onClick={() => setInputType('url')}
+          >
+            URL
+          </Button>
+          <Button
+            active={inputType === 'id'}
+            outline
+            onClick={() => setInputType('id')}
+          >
+            ID
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
+      <div className="inputRow m-2">
+        <FormGroup className="position-relative inputBox">
+          <Input
+            invalid={errorMessage !== ''}
+            type="text"
+            name="clipName"
+            id="clipName"
+            placeholder={`Paste in clip ${inputType}...`}
+            value={inputText}
+            onChange={onChange}
+          />
+          <FormFeedback tooltip>{errorMessage}</FormFeedback>
+        </FormGroup>
+        <Button
+          className="submitButton ml-2 mr-2 mb-2"
+          type="submit"
+          color="primary"
         >
-          <option value="id">ID</option>
-          <option value="url">URL</option>
-        </Input>
-      </FormGroup>
-      <FormGroup className="position-relative">
-        <Input
-          className="mb-4"
-          invalid={errorMessage !== ''}
-          type="text"
-          name="clipName"
-          id="clipName"
-          placeholder={`Paste in clip ${inputType}...`}
-          value={inputText}
-          onChange={onChange}
-        />
-        <FormFeedback tooltip>{errorMessage}</FormFeedback>
-      </FormGroup>
-      <Button className="m-2" type="submit" color="primary">
-        Add Clip
-      </Button>
+          Add Clip
+        </Button>
+      </div>
     </Form>
   );
 };

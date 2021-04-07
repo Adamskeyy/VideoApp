@@ -1,0 +1,32 @@
+.inputRow {
+  display: flex;
+  justify-content: center;
+}
+
+.inputBox {
+  width: 50%;
+}
+
+.inputForm {
+  width: '80%';
+  margin: '0 auto';
+}
+
+.submitButton {
+  height: calc(1.5em + 0.75rem + 2px);
+}
+
+@media (max-width: 560px) {
+  .inputRow {
+    flex-direction: column;
+  }
+
+  .inputBox {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .submitButton {
+    margin-top: 1rem;
+  }
+}

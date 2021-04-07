@@ -1,28 +1,27 @@
 // reactstrap / styles
-import { ListGroup, Button } from 'reactstrap';
+import { Button, ButtonGroup } from 'reactstrap';
 import PaginationComponent from 'react-reactstrap-pagination';
 import './VideoList.css';
 // hooks
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 // redux
-import { fetchVideos, clearVideoList } from '../../redux/videoAppSlice';
+import { fetchVideos } from '../../redux/videoAppSlice';
 // selectors
-import { videoSortSelector } from '../../redux/selectors'
+import { videoSortSelector } from '../../redux/selectors';
 // components
 import VideoCard from '../VideoCard';
 import SortBy from '../SortBy';
+import DeleteAllModal from '../DeleteAllModal';
 // variables
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 5;
 
 const VideoList = () => {
   // video state
   const dispatch = useDispatch();
-  // const videos = useSelector(state => state.videoApp.videos);
   const videos = useSelector(videoSortSelector);
-
   // UI state
-  const [isCardLayout, setIsCardLayout] = useState(false);
+  const [isListLayout, setIsListLayout] = useState(true);
   const [showFavourites, setShowFavourites] = useState(false);
   // pagination
   const [selectedPage, setSelectedPage] = useState(1);
@@ -43,42 +42,49 @@ const VideoList = () => {
     setShowFavourites((prev) => !prev);
   };
 
-  let favouriteIconClasses = 'fa fa-star';
-  if (showFavourites) {
-    favouriteIconClasses = 'fa fa-star checked';
-  }
+  const favouriteIconClasses = showFavourites
+    ? 'fa fa-star checked'
+    : 'fa fa-star';
 
   const videoList = videosToDisplay.length ? (
-    <ListGroup horizontal={isCardLayout}>
+    <ul className={isListLayout ? 'videoList' : 'videoGrid'}>
       {videosOnCurrentPage.map((video) => (
         <VideoCard key={video.id} video={video} />
       ))}
-    </ListGroup>
+    </ul>
   ) : (
     <p>There is nothing to display!</p>
   );
 
   const controlButtons = (
-    <div>
-      <Button
-        className="m-2"
-        outline
-        color="secondary"
-        onClick={() => setIsCardLayout((prev) => !prev)}
-      >
-        Change View
-      </Button>
-      <Button className="m-2" onClick={handleFavouriteFilter} color="secondary">
-        <span className={favouriteIconClasses}></span>
-      </Button>
-      <Button
-        className="m-2"
-        color="danger"
-        onClick={() => dispatch(clearVideoList())}
-      >
-        Delete All
-      </Button>
-      <SortBy />
+    <div className="controlBar">
+      <div className="controlButtons">
+        <ButtonGroup className="m-2">
+          <Button
+            active={isListLayout}
+            outline
+            onClick={() => setIsListLayout(true)}
+          >
+            <i className="fa fa-bars"></i>
+          </Button>
+          <Button
+            active={!isListLayout}
+            outline
+            onClick={() => setIsListLayout(false)}
+          >
+            <i className="fa fa-th-large"></i>
+          </Button>
+        </ButtonGroup>
+        <SortBy />
+        <Button
+          className="m-2"
+          onClick={handleFavouriteFilter}
+          color="secondary"
+        >
+          <span className={favouriteIconClasses}></span>
+        </Button>
+      </div>
+      <DeleteAllModal />
     </div>
   );
 
@@ -94,8 +100,8 @@ const VideoList = () => {
   return (
     <>
       {controlButtons}
-      {pagination}
       {videoList}
+      {pagination}
     </>
   );
 };

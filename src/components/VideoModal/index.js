@@ -36,8 +36,8 @@ const VideoModal = ({ videoId, origin, title }) => {
     );
 
   return (
-    <div>
-      <Button className="mt-3 mb-2" color="warning" onClick={toggleModal}>
+    <>
+      <Button className="m-2" color="warning" onClick={toggleModal}>
         Play
       </Button>
       <Modal isOpen={modal} toggle={toggleModal}>
@@ -45,7 +45,7 @@ const VideoModal = ({ videoId, origin, title }) => {
         <ModalBody>{modalIframe}</ModalBody>
         <ModalFooter />
       </Modal>
-    </div>
+    </>
   );
 };
 

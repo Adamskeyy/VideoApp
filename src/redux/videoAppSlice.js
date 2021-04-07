@@ -65,7 +65,7 @@ export const fetchVideoById = createAsyncThunk(
 const videoAppSlice = createSlice({
   name: 'videoApp',
   initialState: {
-    sortType: OLDEST,
+    sortType: NEWEST,
     originSite: '',
     videos: [],
     errorMessage: '',
