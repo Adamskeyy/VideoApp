@@ -24,7 +24,7 @@ const InputForm = () => {
   const dispatch = useDispatch();
   const { errorMessage } = useSelector((state) => state.videoApp);
   const [inputText, setInputText] = useState('');
-  const [inputType, setInputType] = useState('id');
+  const [inputType, setInputType] = useState('url');
   // validation
   const {
     validateInput,

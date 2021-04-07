@@ -1,5 +1,6 @@
 {
   "name": "videoapp",
+  "description": "VideoApp is an application enabling the user access to vimeo and youtube videos of his/her choice in one place.",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
