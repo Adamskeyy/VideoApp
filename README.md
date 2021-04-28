@@ -18,8 +18,8 @@ In order to launch application in local environment, user must provide .env.loca
 - [Vimeo API](https://developer.vimeo.com/api/guides/start)
 
 ```
-REACT_APP_YOUTUBE_API_KEY={ YOUR_YOUTUBE_API_KEY }
-REACT_APP_VIMEO_ACCESS_TOKEN={ VIMEO_ACCESS_TOKEN }
+REACT_APP_YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY
+REACT_APP_VIMEO_ACCESS_TOKEN=YOUR_VIMEO_ACCESS_TOKEN
 ```
 
 With all the dependencies installed and credentials set in .env.local file, you can start using the application by launching script shown below.
