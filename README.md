@@ -36,4 +36,4 @@ npm start
   - For easier asynchronous redux fetch actions using createAsyncThunk function
 - reduxjs/reselect: To extract some logic out of redux store methods with createSelector function and use it inside chosen components
 - reactstrap: For faster creation of eye-friendly layout
-- momentjs: For easier handling of datetime formats
+- date-fns: For easier handling of datetime formats

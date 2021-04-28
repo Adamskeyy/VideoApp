@@ -2,8 +2,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // axios
 import axios from 'axios';
-// moment
-import moment from 'moment';
+// date-fns
+import { format } from 'date-fns';
 // local storage methods
 import {
   storeVideo,
@@ -84,8 +84,8 @@ const videoAppSlice = createSlice({
           views: payload.statistics.viewCount,
           likes: payload.statistics.likeCount,
           thumbnail: payload.snippet.thumbnails.medium.url,
-          rawDateTime: moment(),
-          addedAt: moment().format('DD.MM.YYYY, kk:mm'),
+          rawDateTime: new Date(),
+          addedAt: format(new Date(), 'dd.MM.yyyy, kk:mm').toString(),
           favourite: false,
         };
         state.videos.push(video);
@@ -98,8 +98,8 @@ const videoAppSlice = createSlice({
           title: payload.name,
           likes: payload.metadata.connections.likes.total,
           thumbnail: payload.pictures.sizes[0].link,
-          rawDateTime: moment(),
-          addedAt: moment().format('DD.MM.YYYY, kk:mm'),
+          rawDateTime: new Date(),
+          addedAt: format(new Date(), 'dd.MM.yyyy, kk:mm').toString(),
           favourite: false,
         };
         state.videos.push(video);
